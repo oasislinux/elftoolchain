@@ -305,7 +305,7 @@ struct name {							\
 #if defined(__GNUC__)
 #define	ELFTC_VCSID(ID)		__asm__(".ident\t\"" ID "\"")
 #else
-#define	ELFTC_VCSID(ID)		/**/
+#define	ELFTC_VCSID(ID)		_Static_assert(1, "")
 #endif
 
 #endif
