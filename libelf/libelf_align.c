@@ -39,25 +39,38 @@ struct align {
 	unsigned int a64;
 };
 
-#ifdef	__GNUC__
+#if	__STDC_VERSION__ >= 201112L
+#define	MALIGN(N)	{					\
+		.a32 = _Alignof(Elf32_##N),			\
+		.a64 = _Alignof(Elf64_##N)			\
+	}
+#define	MALIGN64(V)	{					\
+		.a32 = 0,					\
+		.a64 = _Alignof(Elf64_##V)			\
+	}
+#define	MALIGN_WORD()	{					\
+		.a32 = _Alignof(int32_t),			\
+		.a64 = _Alignof(int64_t)			\
+	}
+#elif	defined(__GNUC__)
 #define	MALIGN(N)	{					\
 		.a32 = __alignof__(Elf32_##N),			\
 		.a64 = __alignof__(Elf64_##N)			\
 	}
-#define	MALIGN64(V)	  {					\
+#define	MALIGN64(V)	{					\
 		.a32 = 0,					\
 		.a64 = __alignof__(Elf64_##V)			\
 	}
 #define	MALIGN_WORD()	{					\
 		.a32 = __alignof__(int32_t),			\
 		.a64 = __alignof__(int64_t)			\
-	    }
+	}
 #elif defined(__lint__)
 #define MALIGN(N)	{ .a32 = 0, .a64 = 0 }
 #define MALIGN64(N)	{ .a32 = 0, .a64 = 0 }
 #define MALIGN_WORD(N)	{ .a32 = 0, .a64 = 0 }
 #else
-#error	Need the __alignof__ builtin.
+#error	Need C11 _Alignof, or the __alignof__ builtin.
 #endif
 #define	UNSUPPORTED()	{					\
 		.a32 = 0,					\
