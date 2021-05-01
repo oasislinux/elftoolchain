@@ -42,7 +42,6 @@ gelf_getrela(Elf_Data *ed, int ndx, GElf_Rela *dst)
 	Elf *e;
 	size_t msz;
 	Elf_Scn *scn;
-	uint32_t sh_type;
 	Elf32_Rela *rela32;
 	Elf64_Rela *rela64;
 	struct _Libelf_Data *d;
@@ -59,12 +58,7 @@ gelf_getrela(Elf_Data *ed, int ndx, GElf_Rela *dst)
 	ec = e->e_class;
 	assert(ec == ELFCLASS32 || ec == ELFCLASS64);
 
-	if (ec == ELFCLASS32)
-		sh_type = scn->s_shdr.s_shdr32.sh_type;
-	else
-		sh_type = scn->s_shdr.s_shdr64.sh_type;
-
-	if (_libelf_xlate_shtype(sh_type) != ELF_T_RELA) {
+	if (d->d_data.d_type != ELF_T_RELA) {
 		LIBELF_SET_ERROR(ARGUMENT, 0);
 		return (NULL);
 	}
@@ -105,7 +99,6 @@ gelf_update_rela(Elf_Data *ed, int ndx, GElf_Rela *dr)
 	Elf *e;
 	size_t msz;
 	Elf_Scn *scn;
-	uint32_t sh_type;
 	Elf32_Rela *rela32;
 	Elf64_Rela *rela64;
 	struct _Libelf_Data *d;
@@ -122,12 +115,7 @@ gelf_update_rela(Elf_Data *ed, int ndx, GElf_Rela *dr)
 	ec = e->e_class;
 	assert(ec == ELFCLASS32 || ec == ELFCLASS64);
 
-	if (ec == ELFCLASS32)
-		sh_type = scn->s_shdr.s_shdr32.sh_type;
-	else
-		sh_type = scn->s_shdr.s_shdr64.sh_type;
-
-	if (_libelf_xlate_shtype(sh_type) != ELF_T_RELA) {
+	if (d->d_data.d_type != ELF_T_RELA) {
 		LIBELF_SET_ERROR(ARGUMENT, 0);
 		return (0);
 	}
